@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  whatsapp-bot:
+    build: .
+    container_name: whatsapp-sticker-bot
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - OWNER_NUMBER=${OWNER_NUMBER}
+    volumes:
+      - ./auth_info:/app/auth_info
+      - ./temp:/app/temp
+      - ./blacklist.json:/app/blacklist.json
+    networks:
+      - whatsapp-network
+
+networks:
+  whatsapp-network:
+    driver: bridge
