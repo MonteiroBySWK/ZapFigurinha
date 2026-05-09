@@ -26,7 +26,7 @@ Este guia cobre o deploy seguro e eficiente do LumaBot em produção usando Dock
 │   │   └── conf.d/
 │   │       └── default.conf # Virtual host do LumaBot
 │   └── ssl/                 # Certificados SSL (opcional)
-├── .env.production.example  # Template de variáveis para produção
+├── .env.example             # Template de variáveis
 └── docs/07-Producao.md      # Este arquivo
 ```
 
