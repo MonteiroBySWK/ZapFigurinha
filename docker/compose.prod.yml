@@ -1,7 +1,7 @@
 # Production Compose - Apr 26, 2026
 services:
   nginx:
-    image: nginx:latest
+    image: nginx:1.26.0
     container_name: luma-nginx
     restart: unless-stopped
     ports:

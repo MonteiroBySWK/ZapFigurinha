@@ -12,7 +12,7 @@ This folder contains all Docker-related files for LumaBot development and produc
 ### Docker Compose
 
 - **compose.prod.yml** — Production setup (Nginx + Bot with health checks)
-- **compose.dev.yml** — Development setup (local mounts, hot-reload)
+- **compose.dev.yml** — Development setup (named volumes for data/auth, rebuild on code changes)
 
 ### Entrypoint & Nginx
 
@@ -40,5 +40,5 @@ docker-compose -f docker/compose.prod.yml up -d
 
 ## Full Documentation
 
-- See `docs/DOCKER.md` for basic Docker setup
+- See `docs/06-Docker.md` for basic Docker setup
 - See `docs/07-Producao.md` for production deployment guide

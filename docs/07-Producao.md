@@ -75,6 +75,8 @@ Se você tem um domínio e quer HTTPS:
 mkdir -p docker/ssl
 
 # Gere certificados SSL (Let's Encrypt com Certbot)
+# Nota: Nginx deve estar parado para usar o modo --standalone (porta 80)
+docker-compose -f docker/compose.prod.yml down
 certbot certonly --standalone -d seu-dominio.com
 
 # Copie os certificados
@@ -82,7 +84,8 @@ cp /etc/letsencrypt/live/seu-dominio.com/fullchain.pem docker/ssl/
 cp /etc/letsencrypt/live/seu-dominio.com/privkey.pem docker/ssl/
 chmod 644 docker/ssl/*.pem
 
-# Atualize docker/nginx/conf.d/default.conf com HTTPS (veja seção abaixo)
+# Suba novamente
+docker-compose -f docker/compose.prod.yml up -d
 ```
 
 ### 4. Verificar Status
@@ -127,7 +130,7 @@ server {
   client_max_body_size 50M;
 
   location / {
-    proxy_pass http://app:3000;
+    proxy_pass http://luma_backend;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
@@ -155,14 +158,15 @@ Os dados são armazenados em volumes Docker nomeados:
 Nunca delete esses volumes em produção!
 
 ```bash
-# Listar volumes
+# Listar volumes para descobrir os nomes reais (geralmente prefixados com o nome da pasta)
 docker volume ls
 
 # Inspecionar um volume
-docker volume inspect luma-bot_auth_data
+docker volume inspect auth_data
 
 # Backup de dados
-docker run --rm -v luma-bot_bot_data:/data -v $(pwd)/backups:/backup \
+# Substitua 'bot_data' pelo nome real do volume (ex: lumabot_bot_data)
+docker run --rm -v bot_data:/data -v $(pwd)/backups:/backup \
   busybox tar czf /backup/bot-data-$(date +%Y%m%d-%H%M%S).tar.gz -C /data .
 ```
 
@@ -170,7 +174,7 @@ docker run --rm -v luma-bot_bot_data:/data -v $(pwd)/backups:/backup \
 
 ### Health Checks
 
-Nginx verifica se o bot está saudável a cada 30 segundos:
+O Docker verifica se o bot está saudável a cada 30 segundos (conforme definido no `compose.prod.yml`). Para verificar manualmente via Nginx:
 
 ```bash
 curl http://localhost/health

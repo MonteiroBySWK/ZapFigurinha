@@ -92,9 +92,11 @@ CLOUDFLARE_TUNNEL=false         # Se estiver atrás de tunnel
 
 **Bot não conecta ao WhatsApp**
 
+No setup com Docker Compose, as credenciais do WhatsApp ficam no volume nomeado `auth_data` montado em `/app/auth_info`. Para resetar a sessão, remova os volumes e suba o ambiente novamente:
+
 ```bash
-rm -rf auth_info/
-docker-compose -f docker/compose.dev.yml restart dev
+docker-compose -f docker/compose.dev.yml down -v
+docker-compose -f docker/compose.dev.yml up -d
 ```
 
 Depois escaneie o QR novamente.
